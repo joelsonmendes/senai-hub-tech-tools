@@ -1,21 +1,24 @@
-# SENAI HUB TECH TOOLS V9 — React + Firebase
+# SENAI HUB TECH TOOLS V9.1 — correção de tela preta
 
-## Execução
-1. `npm install`
-2. Copie `.env.example` para `.env.local` (ou configure as seis variáveis VITE_ na Vercel).
-3. `npm run dev` para desenvolvimento ou `npm run build` para produção.
-4. Na Vercel, importe o repositório, framework **Vite**, build `npm run build`, diretório `dist`.
-5. No Firebase Authentication > Settings > Authorized domains, inclua o domínio exato da implantação Vercel. Não é necessário alterar o domínio do MOBILOG.
+## Causa provável
+A V9 exigia variáveis VITE_FIREBASE_* antes de iniciar o Firebase. Quando ausentes, o React podia falhar na inicialização e exibir uma tela escura sem interface. Além disso, abrir `index.html` diretamente como arquivo local **não executa** um projeto React/Vite.
 
-## Banco
-- Coleção `ferramentas`: documentos com `nome`, `categoria`, `descricao`, `url`, `publicado` (boolean), `destaque` (boolean).
-- Coleção `administradores`: documento cujo ID é o UID da conta; `ativo: true` e `papel: "admin"`.
-- Publique regras seguras equivalentes ao arquivo `firestore.rules`. O arquivo é referência: **não** é publicado automaticamente.
-- Consultas públicas usam `where('publicado','==',true)`; administrador pode ler todos os documentos.
+## Correções
+- Firebase Web inicializado com a configuração pública do projeto `senai-hub-tech-tools` já fornecida (variáveis de ambiente opcionais para substituição).
+- Tela de erro visível para falhas de renderização React, em vez de tela preta silenciosa.
+- Mantidos o catálogo Firestore, Authentication, o painel de administração, o menu e o estilo preto e laranja.
+- Sem acesso ou alterações ao banco MOBILOG.
 
-## Limitações
-- O QR Code é salvo somente no navegador local, não sincronizado pelo Firebase.
-- Cursos, trilhas, laboratórios e projetos são páginas demonstrativas sem cadastro remoto.
-- Os links de ferramentas são externos; a autenticação do portal não protege esses aplicativos.
-- Não compartilhe senhas nem credenciais de conta de serviço. A API key Web do Firebase não é uma credencial de administrador.
-- Esta versão ainda precisa de testes com login real e regras publicadas antes de uso em produção.
+## Executar
+1. Instale Node.js 20+.
+2. Na pasta do projeto, execute `npm install` e `npm run dev`.
+3. Abra o endereço exibido pelo Vite no navegador.
+
+## Publicar na Vercel
+Importe o repositório ou envie o projeto; framework Vite; build `npm run build`; diretório de saída `dist`. O arquivo `index.html` na raiz é o ponto de entrada do Vite, não deve ser aberto diretamente sem compilação.
+
+## Firebase
+A configuração Web do Firebase é pública, mas regras de segurança do Firestore precisam estar publicadas. Autorize o domínio de produção no Firebase Authentication. O documento `administradores/<UID>` deve conter `ativo: true` e `papel: "admin"`. O catálogo lê `ferramentas` com filtro `publicado == true` para usuários públicos.
+
+## Estado de validação
+A instalação npm e o build não puderam ser concluídos neste ambiente (tempo limite na instalação). É necessário executar `npm run build` no seu ambiente ou na Vercel e validar o login e leitura do Firestore. Não afirmar que a correção foi testada em produção.
