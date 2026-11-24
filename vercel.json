@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/gestao-hub",
+      "destination": "/index.html"
+    }
+  ]
+}
